@@ -1,83 +1,79 @@
-Assignment 1 – Divide & Conquer Algorithms
-Architecture Notes
+# Assignment 1 – Divide & Conquer Algorithms
 
-MergeSort
-Uses a reusable buffer for merging to avoid repeated allocations. For small subarrays (≤16), insertion sort is applied to reduce recursion depth and improve cache locality.
-Maximum recursion depth = O(log n).
+## Architecture Notes
 
-QuickSort
-Randomized pivot selection ensures expected recursion depth O(log n). The implementation always recurses into the smaller side and iterates over the larger one, which guarantees bounded stack depth ≈ O(log n) even in the worst case.
+### MergeSort
 
-Deterministic Select (Median of Medians)
-Divides the array into groups of 5, sorts each group with insertion sort, and takes the medians. These medians are recursively processed to pick a pivot. Guarantees linear running time and recursion depth O(log n) in the worst case.
+* Uses a **reusable buffer** for merging to avoid repeated allocations.
+* Switches to **insertion sort** for small subarrays (≤16) to reduce recursion overhead and improve cache locality.
+* **Recursion depth**: `O(log n)`.
 
-Closest Pair of Points (2D)
-Implements the classical D&C algorithm: sort by x, split recursively, maintain y-ordering via merging. For very small subsets (≤3 points), brute-force is used. Recursion depth = O(log n). Uses an auxiliary array for y-merge.
+### QuickSort
 
-Recurrence Analysis
+* Uses a **randomized pivot** for balanced partitions in expectation.
+* Always **recurses into the smaller partition** and iterates over the larger one → ensures bounded recursion depth.
+* **Stack depth**: ≈ `O(log n)` even in worst case.
 
-MergeSort
-Recurrence:
-T(n) = 2T(n/2) + Θ(n)
-By Master Theorem (Case 2): a = 2, b = 2, f(n) = Θ(n) → T(n) = Θ(n log n).
+### Deterministic Select (Median of Medians)
 
-QuickSort (randomized, tail recursion optimization)
-Expected recurrence:
-T(n) = T(q) + T(n - q - 1) + Θ(n), where q is pivot position.
-With balanced partitions in expectation → T(n) = 2T(n/2) + Θ(n) → Θ(n log n).
-Worst case (without randomization): T(n) = T(n-1) + Θ(n) → Θ(n^2).
+* Divides array into **groups of 5**, sorts each with insertion sort, and finds the **median of medians** as pivot.
+* Recurses only on the required side, preferring the smaller partition.
+* Guarantees **linear runtime** and recursion depth `O(log n)` in the worst case.
 
-Deterministic Select (Median of Medians)
-Groups of 5 guarantee a “good enough” pivot.
-Recurrence:
-T(n) ≤ T(n/5) + T(7n/10) + Θ(n)
-By Akra–Bazzi theorem → T(n) = Θ(n).
+### Closest Pair of Points (2D)
 
-Closest Pair of Points (2D)
-After initial Θ(n log n) sorting by x, recursive split:
-T(n) = 2T(n/2) + Θ(n)
-(strip check is Θ(n) since each point checks ≤7 neighbors).
-Overall: T(n) = Θ(n log n).
+* Classical D&C approach:
 
-Experimental Results
-Plots
+  1. Sort by `x`
+  2. Recurse on halves
+  3. Maintain `y`-ordering with merge
+  4. Use brute-force on subsets ≤3 points
+* Uses auxiliary array for merging by `y`.
+* **Recursion depth**: `O(log n)`.
 
-(should be generated with Java timing code or exported to CSV and plotted with Python/Matplotlib)
+---
 
-Time vs n
+## Recurrence Analysis
 
-MergeSort and QuickSort grow as n log n.
+| Algorithm                | Recurrence                                 | Solution     | Notes                             |
+| ------------------------ | ------------------------------------------ | ------------ | --------------------------------- |
+| **MergeSort**            | `T(n) = 2T(n/2) + Θ(n)`                    | `Θ(n log n)` | Master Theorem, Case 2            |
+| **QuickSort (expected)** | `T(n) = T(q) + T(n-q-1) + Θ(n)` → balanced | `Θ(n log n)` | Randomized pivot ensures balance  |
+| **QuickSort (worst)**    | `T(n) = T(n-1) + Θ(n)`                     | `Θ(n²)`      | Occurs only without randomization |
+| **Deterministic Select** | `T(n) ≤ T(n/5) + T(7n/10) + Θ(n)`          | `Θ(n)`       | Solved via Akra–Bazzi             |
+| **Closest Pair**         | `T(n) = 2T(n/2) + Θ(n)`                    | `Θ(n log n)` | Merge + strip scan                |
 
-QuickSort is usually faster for mid-size inputs due to fewer copy operations.
+---
 
-Deterministic Select is linear but has large constant factors.
+## Experimental Results
 
-Closest Pair grows as n log n.
+### Time vs Input Size
 
-Recursion Depth vs n
+* MergeSort and QuickSort follow **`n log n`** growth.
+* QuickSort is generally faster for mid-size arrays due to fewer copy operations.
+* Deterministic Select shows **linear scaling**, but large constant factors.
+* Closest Pair grows as **`n log n`**.
 
-MergeSort and Closest Pair: depth ≈ log₂ n.
+### Recursion Depth
 
-QuickSort with tail recursion: depth bounded by O(log n).
+* MergeSort and Closest Pair: depth ≈ `log₂ n`.
+* QuickSort (tail recursion optimization): depth bounded by `O(log n)`.
+* Deterministic Select: depth `O(log n)` but shallower recursion due to reduction rate.
 
-Deterministic Select: depth O(log n) with smaller constants.
+---
 
-Discussion of Constant-Factor Effects
+## Constant-Factor Effects
 
-MergeSort: buffer allocation/copying adds overhead, but algorithm is stable.
+* **MergeSort**: overhead from buffer allocation and copying, but stable performance.
+* **QuickSort**: fewer allocations but slightly more comparisons; less predictable than MergeSort.
+* **Deterministic Select**: guaranteed linear, but slower in practice due to median computation overhead.
+* **Closest Pair**: asymptotics hold, but merging and strip scanning introduce large constants.
 
-QuickSort: fewer allocations but more comparisons.
+---
 
-Deterministic Select: extra median steps add overhead, so it’s slower in practice than randomized selection despite linear complexity.
+## Summary
 
-Closest Pair: high hidden constant factors from merging and strip-check, even though asymptotics match.
-
-Summary
-
-Theoretical asymptotics (Θ(n log n) or Θ(n)) are confirmed by experiments.
-
-Constant-factor differences observed: QuickSort is faster than MergeSort in practice, but less predictable.
-
-Deterministic Select behaves linearly, but randomized quickselect is usually faster in practice.
-
-Closest Pair matches Θ(n log n) but shows significant constant-time overhead from merge operations.
+* The **theoretical asymptotics** (`Θ(n log n)` or `Θ(n)`) are confirmed experimentally.
+* **QuickSort** is usually faster than MergeSort in practice but less predictable.
+* **Deterministic Select** performs linearly, though randomized QuickSelect is more practical.
+* **Closest Pair** aligns with theory but has non-trivial constant factors.
