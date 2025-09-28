@@ -15,7 +15,7 @@ with measurements.
 • Collect metrics (time, recursion depth, comparisons/allocations) and communicate results via a short
 report and clean Git history.
 
-
+## Architecture Notes
 ## Algorithms
 
 ### MergeSort
