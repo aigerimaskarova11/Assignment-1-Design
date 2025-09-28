@@ -7,9 +7,11 @@ The objective was to design, implement, and analyze four classical divide-and-co
 The work focused not only on correctness but also on studying recursion depth, running-time recurrences, and comparing theoretical complexity predictions with experimental performance. 
 
 ## Learning goals
-• Implement classic divide-and-conquer algorithms with safe recursion patterns
+• Implement classic divide-and-conquer algorithms with safe recursion patterns.
+
 • Analyze running-time recurrences using Master Theorem (3 cases) and Akra–Bazzi intuition; validate
 with measurements.
+
 • Collect metrics (time, recursion depth, comparisons/allocations) and communicate results via a short
 report and clean Git history.
 
